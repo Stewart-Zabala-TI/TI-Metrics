@@ -1,0 +1,14 @@
+timestamp,ip,metodo,status,endpoint
+2026-10-09T08:15:30Z,181.196.56.24,GET,200,/api/v1/users
+2026-10-09T08:16:00Z,190.152.20.10,POST,201,/api/v1/auth/login
+2026-10-09T08:16:00Z,190.152.20.10,POST,201,/api/v1/auth/login
+2026-10-09T08:17:10Z,8.8.8.8,POST,500,/api/v1/checkout
+2026-10-09T08:18:25Z,185.220.101.5,GET,404,/api/v1/not-found
+2026-10-09T08:19:00Z,999.999.999.999,GET,200,/api/v1/test
+2026-10-09T08:20:15Z,181.196.56.24,DELETE,invalid_status,/api/v1/users/42
+2026-10-09 08:21:00,189.247.100.12,PATCH,200,/api/v1/profiley
+2026-10-09T08:22:40Z,,GET,200,/health
+
+
+
+
