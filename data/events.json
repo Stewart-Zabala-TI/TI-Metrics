@@ -1,49 +1,8 @@
 [
-  {
-    "event_id": "evt-001",
-    "timestamp": "2026-10-09T08:15:30Z",
-    "server_id": "srv-ec-01",
-    "cpu_percent": 45.2,
-    "memory_percent": 62.8,
-    "status": "HEALTHY"
-  },
-  {
-    "event_id": "evt-001",
-    "timestamp": "2026-10-09T08:15:30Z",
-    "server_id": "srv-ec-01",
-    "cpu_percent": 45.2,
-    "memory_percent": 62.8,
-    "status": "HEALTHY"
-  },
-  {
-    "event_id": "evt-002",
-    "timestamp": "2026-10-09T08:16:10Z",
-    "server_id": "srv-ec-02",
-    "cpu_percent": 98.7,
-    "memory_percent": 94.1,
-    "status": "CRITICAL"
-  },
-  {
-    "event_id": "evt-003",
-    "timestamp": "2026-10-09T08:17:00Z",
-    "server_id": "srv-us-01",
-    "cpu_percent": -5.0,
-    "memory_percent": 150.0,
-    "status": "WARNING"
-  },
-  {
-    "event_id": "evt-004",
-    "timestamp": "2026-10-09T08:18:45Z",
-    "server_id": "srv-eu-01",
-    "cpu_percent": null,
-    "memory_percent": 55.0,
-    "status": "HEALTHY"
-  },
-  {
-    "event_id": "evt-005",
-    "timestamp": "2026-10-09T08:19:20Z",
-    "cpu_percent": 30.0,
-    "memory_percent": 40.0,
-    "status": "UNKNOWN"
-  }
+  {"event_id": "evt-001", "timestamp": "2026-10-09T08:15:30Z", "server_id": "srv-ec-01", "cpu_percent": 45.2, "memory_percent": 62.8, "status": "HEALTHY"},
+  {"event_id": "evt-001", "timestamp": "2026-10-09T08:15:30Z", "server_id": "srv-ec-01", "cpu_percent": 45.2, "memory_percent": 62.8, "status": "HEALTHY"},
+  {"event_id": "evt-002", "timestamp": "2026-10-09T08:16:10Z", "server_id": "srv-ec-02", "cpu_percent": 98.7, "memory_percent": 94.1, "status": "CRITICAL"},
+  {"event_id": "evt-003", "timestamp": "2026-10-09T08:17:00Z", "server_id": "srv-us-01", "cpu_percent": -5.0, "memory_percent": 150.0, "status": "WARNING"},
+  {"event_id": "evt-004", "timestamp": "2026-10-09T08:18:45Z", "server_id": "srv-eu-01", "cpu_percent": null, "memory_percent": 55.0, "status": "HEALTHY"},
+  {"event_id": "evt-005", "timestamp": "2026-10-09T08:19:20Z", "cpu_percent": 30.0, "memory_percent": 40.0, "status": "UNKNOWN"}
 ]

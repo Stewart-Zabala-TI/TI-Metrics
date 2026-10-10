@@ -17,21 +17,16 @@ def cargar_archivos_json(ruta_json):
 
     try:
         with open(ruta_json, mode='r', encoding='utf-8') as archivo:
-            try:
-                datos = json.load(archivo)
-            except json.JSONDecodeError:
-                archivo.seek(0)
-                datos = []
-                for linea in archivo:
-                    linea = linea.strip()
-                    if not linea:
-                        continue
-                    try:
-                        datos.append(json.loads(linea))
-                    except json.JSONDecodeError:
-                        continue
+            for linea in archivo:
+                linea_limpia = linea.strip(" \t\r\n,[]")
+                if not linea_limpia:
+                    continue
 
-            for evento in datos:
+                try:
+                    evento = json.loads(linea_limpia)
+                except json.JSONDecodeError:
+                    continue
+
                 if not isinstance(evento, dict):
                     continue
 
