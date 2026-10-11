@@ -1,8 +1,8 @@
 {
     "metricas_logs": {
-        "total_logs_procesados": 5,
-        "cantidad_errores_500": 1,
-        "porcentaje_errores_500": 20.0
+        "total_logs_procesados": 122,
+        "cantidad_errores_500": 12,
+        "porcentaje_errores_500": 9.84
     },
     "ips_criticas": [
         {
@@ -24,9 +24,89 @@
                 "as": "AS15169 Google LLC",
                 "query": "8.8.8.8"
             }
+        },
+        {
+            "ip": "1.1.1.1",
+            "endpoint": "/api/v1/login",
+            "geolocalizacion": {
+                "status": "success",
+                "country": "Australia",
+                "countryCode": "AU",
+                "region": "QLD",
+                "regionName": "Queensland",
+                "city": "South Brisbane",
+                "zip": "4101",
+                "lat": -27.4766,
+                "lon": 153.0166,
+                "timezone": "Australia/Brisbane",
+                "isp": "Cloudflare, Inc",
+                "org": "APNIC and Cloudflare DNS Resolver project",
+                "as": "AS13335 Cloudflare, Inc.",
+                "query": "1.1.1.1"
+            }
+        },
+        {
+            "ip": "157.100.190.188",
+            "endpoint": "/api/v1/users",
+            "geolocalizacion": {
+                "status": "success",
+                "country": "Ecuador",
+                "countryCode": "EC",
+                "region": "P",
+                "regionName": "Pichincha",
+                "city": "Quito",
+                "zip": "",
+                "lat": -0.2309,
+                "lon": -78.5211,
+                "timezone": "America/Guayaquil",
+                "isp": "Telconet S.A",
+                "org": "Ecuanet - Corporacion Ecuatoriana De Informacion",
+                "as": "AS27947 Telconet S.A",
+                "query": "157.100.190.188"
+            }
+        },
+        {
+            "ip": "185.199.108.153",
+            "endpoint": "/healthz",
+            "geolocalizacion": {
+                "status": "success",
+                "country": "United States",
+                "countryCode": "US",
+                "region": "CA",
+                "regionName": "California",
+                "city": "San Francisco",
+                "zip": "94107",
+                "lat": 37.7823,
+                "lon": -122.391,
+                "timezone": "America/Los_Angeles",
+                "isp": "Fastly, Inc.",
+                "org": "GitHub, Inc",
+                "as": "AS54113 Fastly, Inc.",
+                "query": "185.199.108.153"
+            }
+        },
+        {
+            "ip": "20.231.121.214",
+            "endpoint": "/api/v1/checkout",
+            "geolocalizacion": {
+                "status": "success",
+                "country": "United States",
+                "countryCode": "US",
+                "region": "VA",
+                "regionName": "Virginia",
+                "city": "Boydton",
+                "zip": "23917",
+                "lat": 36.677696,
+                "lon": -78.37471,
+                "timezone": "America/New_York",
+                "isp": "Microsoft Corporation",
+                "org": "Microsoft Azure Cloud (eastus)",
+                "as": "AS8075 Microsoft Corporation",
+                "query": "20.231.121.214"
+            }
         }
     ],
     "resumen_infraestructura": {
-        "total_eventos_procesados": 2
+        "total_eventos_procesados": 136
     }
 }

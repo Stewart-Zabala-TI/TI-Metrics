@@ -669,3 +669,25 @@ def generar_reporte():
 if __name__ == "__main__":
     generar_reporte()
 ```
+
+
+## Registro de Prompt # [11]
+
+* **Fecha:** 2026-10-11
+
+* **Módulo/Función:** data/logs.csv y data/events.json
+
+* **Prompt Enviado:** "Quiero que me crees un archivo más grande de events.json y logs.csv con bastantes datos trampa y errores, con el objetivo de ver cómo aguanta mi programa y poner a prueba si mi código puede con un volumen más alto tipo Big Data sin romperse. Trata de forzar errores y dime qué observaciones tienes sobre el aguante de mi programa."
+
+* **Respuesta de la IA:** La IA advirtió sobre el límite de velocidad (Rate Limit de 45 peticiones/minuto) de la API pública gratuita y explicó que en servidores reales los ataques se concentran en pocas IPs repetidas. Generó más de 150 registros en cada archivo inyectando casos trampa (duplicados, status fuera de rango, IPs inválidas, porcentajes corruptos) para validar la resistencia de los filtros.
+
+* **Análisis Crítico:** Le pedí intencionalmente más datos a la IA para verificar con mis propios ojos si mi código podía aguantar la presión de volúmenes mayores. La prueba demostró que el programa procesó más de 150 registros por streaming en menos de 3 segundos sin saturar la memoria RAM y que el set() protegió el consumo de la API consultando únicamente 5 IPs únicas a pesar de tener múltiples errores 500 repetidos.
+
+* **Solución Final Aplicada:** 
+```python
+from src.limpieza_csv import cargar_y_deduplicar_logs
+from src.limpieza_json import cargar_archivos_json
+from src.main import generar_reporte
+
+generar_reporte()
+```
