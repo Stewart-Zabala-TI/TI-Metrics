@@ -183,7 +183,7 @@ def cargar_y_deduplicar_logs(ruta_csv):
 
 * **Módulo/Función:** src/limpieza.py
 
-* **Prompt Enviado:** "Tengo una serie de validaciones encadenadas mediante operadores lógicos 'or' para comprobar la presencia e integridad de los 5 campos requeridos en cada fila de mi CSV (IP, Status, Timestamp, Endpoint y Método). ¿Existe alguna función nativa de Python más elegante y pythonica que me permita simplificar esta condición en una sola línea sin perder legibilidad ni rigor en la validación estricta?"
+* **Prompt Enviado:** "Tengo una serie de validaciones encadenadas mediante operadores lógicos 'or' para comprobar la presencia e integridad de los 5 campos requeridos en cada fila de mi CSV (IP, Status, Timestamp, Endpoint y Método). ¿Existe alguna función nativa de Python más elegante que me permita simplificar esta condición en una sola línea sin perder legibilidad en la validación estricta?"
 
 * **Respuesta de la IA:** La IA recomendó utilizar la función nativa `all()` de Python combinada con el operador de negación `not`. Explicó que `all()` evalúa si cada uno de los elementos de una lista es verdadero/válido. Al aplicar `if not all([ip, status, timestamp, endpoint, metodo]):`, la condición ejecuta el `continue` si falta o falla tan solo uno de los campos.
 
@@ -481,4 +481,191 @@ def cargar_archivos_json(ruta_json):
         print(f"Error al abrir el archivo en la ruta {ruta_json}: {e}")
 
     return eventos_validos
+```
+
+
+## Registro de Prompt # [8]
+
+* **Fecha:** 2026-10-10
+
+* **Módulo/Función:** src/cliente_api.py
+
+* **Prompt Enviado:** "Tengo una duda con la API ip-api.com que mandó el profesor: al abrir el link me salía solo texto plano en el navegador. Intenté armar mi función con requests usando params={'query': ip}, pero vi que la IP va directo en la URL. ¿Cómo hago para consultar la IP correctamente?
+* **Respuesta de la IA:** La IA me explicó que en ip-api.com la IP debe ir en la ruta de la URL (/json/{ip}) y no como parámetro query. Para evitar que el programa se quede colgado, me enseñó a poner timeout=5 y response.raise_for_status().
+
+* **Análisis Crítico:** Entendí que la IP se pasa en la ruta y no en params.
+
+* **Solución Final Aplicada:** 
+```python
+import requests
+
+
+def consultar_api(ip_texto):
+    if not ip_texto:
+        return None
+
+    ip_limpia = ip_texto.strip()
+    url = f"http://ip-api.com/json/{ip_limpia}"
+
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+
+        datos = response.json()
+
+        if datos.get("status") == "success":
+            return datos
+
+        return None
+
+    except requests.exceptions.Timeout:
+        print(f"Error: La consulta para la IP {ip_limpia} tardó demasiado en responder.")
+        return None
+    except requests.exceptions.RequestException as error:
+        print(f"Error HTTP o de Red al consulta la ip: {ip_limpia}: {error}")
+        return None
+```
+
+
+## Registro de Prompt # [9]
+
+* **Fecha:** 2026-10-11
+
+* **Módulo/Función:** src/main.py
+
+* **Prompt Enviado:** "Estoy armando mi archivo main.py para integrar los módulos y generar data/reporte_resumen.json. Me di cuenta de que me daba error en las rutas logs.csv y events.json. Además, vi que me sugeriste una fórmula de porcentaje con un if, pero yo prefiero no usar if y aplicar directamente un bloque try/except ZeroDivisionError para capturar la división para cero.
+
+* **Respuesta de la IA:** La IA me ayudó a corregir las rutas anteponiendo la carpeta data/ y adaptó el código para calcular el porcentaje de errores 500 utilizando el bloque try/except ZeroDivisionError en lugar de condicionales if, dejando la exportación final a JSON con json.dump().
+
+* **Análisis Crítico:** Corregí la sugerencia de la IA que me recomendaba un if para la división para cero y en su lugar apliqué directamente try/except ZeroDivisionError, además de corregir las rutas relativas con data/ para que encuentre los archivos sin error.
+
+* **Solución Final Aplicada:** 
+```python
+import json
+from src.limpieza_csv import cargar_y_deduplicar_logs
+from src.limpieza_json import cargar_archivos_json
+from src.cliente_api import consultar_api
+
+
+def generar_reporte():
+    logs = cargar_y_deduplicar_logs("data/logs.csv")
+    eventos = cargar_archivos_json("data/events.json")
+
+    total_logs = len(logs)
+    errores_500 = 0
+    ips_criticas_vistas = set()
+    ips_criticas_enriquecidas = []
+
+    for log in logs:
+        if log.get("status") == 500:
+            errores_500 += 1
+            ip = log.get("ip")
+            if ip and ip not in ips_criticas_vistas:
+                ips_criticas_vistas.add(ip)
+                geo_info = consultar_api(ip)
+                ips_criticas_enriquecidas.append({
+                    "ip": ip,
+                    "endpoint": log.get("endpoint"),
+                    "geolocalizacion": geo_info
+                })
+
+    try:
+        porcentaje_500 = (errores_500 / total_logs) * 100
+    except ZeroDivisionError:
+        porcentaje_500 = 0.0
+
+    reporte = {
+        "metricas_logs": {
+            "total_logs_procesados": total_logs,
+            "cantidad_errores_500": errores_500,
+            "porcentaje_errores_500": round(porcentaje_500, 2)
+        },
+        "ips_criticas": ips_criticas_enriquecidas,
+        "resumen_infraestructura": {
+            "total_eventos_procesados": len(eventos)
+        }
+    }
+
+    try:
+        with open("data/reporte_resumen.json", mode="w", encoding="utf-8") as archivo:
+            json.dump(reporte, archivo, indent=4, ensure_ascii=False)
+        print("Reporte generado exitosamente en data/reporte_resumen.json")
+    except IOError as e:
+        print(f"Error al escribir el reporte: {e}")
+
+
+if __name__ == "__main__":
+    generar_reporte()
+```
+
+
+## Registro de Prompt # [10]
+
+* **Fecha:** 2026-10-11
+
+* **Módulo/Función:** main.py
+
+* **Prompt Enviado:** "Intenté ejecutar mi archivo desde la terminal con python src/main.py pero me salió el error ModuleNotFoundError: No module named 'src'. Mi archivo main.py está ubicado adentro de la carpeta src/. ¿Por qué pasa este error y cuál es la solución para que el programa se ejecute correctamente?"
+
+* **Respuesta de la IA:** La IA me explicó que al ejecutar python src/main.py, Python toma la carpeta src/ como la raíz de búsqueda del sistema (sys.path) y por eso no encuentra una carpeta 'src' adentro de sí misma. Me recomendó mover main.py a la raíz principal del proyecto para que funcione como punto de entrada oficial y se pueda ejecutar directamente con python main.py.
+
+* **Análisis Crítico:** Comprendí cómo busca Python los módulos al ejecutarse desde la terminal. Mover main.py a la raíz del proyecto soluciona el error de importación y sigue el estándar de aplicaciones de consola, permitiendo que el profesor ejecute el proyecto con python main.py desde la carpeta principal.
+
+* **Solución Final Aplicada:** 
+```python
+import json
+from src.limpieza_csv import cargar_y_deduplicar_logs
+from src.limpieza_json import cargar_archivos_json
+from src.cliente_api import consultar_api
+
+
+def generar_reporte():
+    logs = cargar_y_deduplicar_logs("data/logs.csv")
+    eventos = cargar_archivos_json("data/events.json")
+
+    total_logs = len(logs)
+    errores_500 = 0
+    ips_criticas_vistas = set()
+    ips_criticas_enriquecidas = []
+
+    for log in logs:
+        if log.get("status") == 500:
+            errores_500 += 1
+            ip = log.get("ip")
+            if ip and ip not in ips_criticas_vistas:
+                ips_criticas_vistas.add(ip)
+                geo_info = consultar_api(ip)
+                ips_criticas_enriquecidas.append({
+                    "ip": ip,
+                    "endpoint": log.get("endpoint"),
+                    "geolocalizacion": geo_info
+                })
+
+    try:
+        porcentaje_500 = (errores_500 / total_logs) * 100
+    except ZeroDivisionError:
+        porcentaje_500 = 0.0
+
+    reporte = {
+        "metricas_logs": {
+            "total_logs_procesados": total_logs,
+            "cantidad_errores_500": errores_500,
+            "porcentaje_errores_500": round(porcentaje_500, 2)
+        },
+        "ips_criticas": ips_criticas_enriquecidas,
+        "resumen_infraestructura": {
+            "total_eventos_procesados": len(eventos)
+        }
+    }
+
+    try:
+        with open("data/reporte_resumen.json", mode="w", encoding="utf-8") as archivo:
+            json.dump(reporte, archivo, indent=4)
+        print("Reporte generado exitosamente en data/reporte_resumen.json")
+    except IOError as e:
+        print(f"Error al escribir el reporte: {e}")
+
+
+if __name__ == "__main__":
+    generar_reporte()
 ```

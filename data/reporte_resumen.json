@@ -1,0 +1,32 @@
+{
+    "metricas_logs": {
+        "total_logs_procesados": 5,
+        "cantidad_errores_500": 1,
+        "porcentaje_errores_500": 20.0
+    },
+    "ips_criticas": [
+        {
+            "ip": "8.8.8.8",
+            "endpoint": "/api/v1/checkout",
+            "geolocalizacion": {
+                "status": "success",
+                "country": "United States",
+                "countryCode": "US",
+                "region": "VA",
+                "regionName": "Virginia",
+                "city": "Ashburn",
+                "zip": "20149",
+                "lat": 39.03,
+                "lon": -77.5,
+                "timezone": "America/New_York",
+                "isp": "Google LLC",
+                "org": "Google Public DNS",
+                "as": "AS15169 Google LLC",
+                "query": "8.8.8.8"
+            }
+        }
+    ],
+    "resumen_infraestructura": {
+        "total_eventos_procesados": 2
+    }
+}
