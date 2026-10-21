@@ -714,3 +714,81 @@ generar_reporte()
 
     return registros_validos
 ```
+
+
+## Registro de Prompt # [13]
+
+* **Fecha:** 2026-10-20
+
+* **Módulo/Función:** src/limpieza_json.py
+
+* **Prompt Enviado:** "Revisé mi módulo limpieza_json.py y me pregunté qué pasa si en el JSON un event_id o server_id viene como número entero en lugar de texto. ¿La función strip() fallaría y detendría todo el programa? ¿Cómo lo soluciono de forma sencilla?"
+
+* **Respuesta de la IA:** La IA confirmó que si event_id es un entero (ejemplo: 1045), la expresión (1045).strip() causa un AttributeError inmediato porque los enteros no tienen el método strip(). La solución directa y más limpia es envolver el valor con str() antes de aplicar strip(), garantizando que cualquier dato se transforme a texto sin romperse.
+
+* **Análisis Crítico:** Identifiqué este caso borde de tipos de datos. Al aplicar str() antes de strip() en los campos de texto del JSON, aseguré que el código maneje tanto identificadores alfanuméricos como numéricos sin provocar caídas inesperadas en el procesamiento.
+
+* **Solución Final Aplicada:** 
+```python
+import json
+
+
+def validar_porcentaje(valor):
+    try:
+        numero = float(valor)
+        if 0.0 <= numero <= 100.0:
+            return numero
+        return None
+    except (ValueError, TypeError):
+        return None
+
+
+def cargar_archivos_json(ruta_json):
+    eventos_validos = []
+    eventos_vistos = set()
+
+    try:
+        with open(ruta_json, mode='r', encoding='utf-8') as archivo:
+            for linea in archivo:
+                linea_limpia = linea.strip(" \t\r\n,[]")
+                if not linea_limpia:
+                    continue
+
+                try:
+                    evento = json.loads(linea_limpia)
+                except json.JSONDecodeError:
+                    continue
+
+                if not isinstance(evento, dict):
+                    continue
+
+                event_id = str(evento.get("event_id") or "").strip()
+                timestamp = str(evento.get("timestamp") or "").strip()
+                server_id = str(evento.get("server_id") or "").strip()
+
+                cpu = validar_porcentaje(evento.get("cpu_percent"))
+                memoria = validar_porcentaje(evento.get("memory_percent"))
+                status = str(evento.get("status") or "").strip().upper()
+
+                if not all([event_id, timestamp, server_id, cpu is not None, memoria is not None, status]):
+                    continue
+
+                if event_id in eventos_vistos:
+                    continue
+
+                eventos_vistos.add(event_id)
+
+                eventos_validos.append({
+                    "event_id": event_id,
+                    "timestamp": timestamp,
+                    "server_id": server_id,
+                    "cpu_percent": cpu,
+                    "memory_percent": memoria,
+                    "status": status
+                })
+
+    except (FileNotFoundError, IOError) as e:
+        print(f"Error al abrir el archivo en la ruta {ruta_json}: {e}")
+
+    return eventos_validos
+```

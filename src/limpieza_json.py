@@ -30,13 +30,13 @@ def cargar_archivos_json(ruta_json):
                 if not isinstance(evento, dict):
                     continue
 
-                event_id = (evento.get("event_id") or "").strip()
-                timestamp = (evento.get("timestamp") or "").strip()
-                server_id = (evento.get("server_id") or "").strip()
+                event_id = str(evento.get("event_id") or "").strip()
+                timestamp = str(evento.get("timestamp") or "").strip()
+                server_id = str(evento.get("server_id") or "").strip()
 
                 cpu = validar_porcentaje(evento.get("cpu_percent"))
                 memoria = validar_porcentaje(evento.get("memory_percent"))
-                status = (evento.get("status") or "").strip().upper()
+                status = str(evento.get("status") or "").strip().upper()
 
                 if not all([event_id, timestamp, server_id, cpu is not None, memoria is not None, status]):
                     continue
