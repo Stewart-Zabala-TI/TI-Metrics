@@ -691,3 +691,26 @@ from src.main import generar_reporte
 
 generar_reporte()
 ```
+
+
+## Registro de Prompt # [12]
+
+* **Fecha:** 2026-10-20
+
+* **Módulo/Función:** Auditoría integral (src/limpieza_csv.py, src/limpieza_json.py, src/cliente_api.py, main.py)
+
+* **Prompt Enviado:** "Quiero que verifiques todo mi código, encuentres posibles bugs, me pongas trampas y le hagas pruebas pesadas de estrés para ver dónde están las fallas o si el programa colapsa con casos raros. Dime qué observaciones tienes sobre su aguante y qué errores detectas."
+
+* **Respuesta de la IA:** La IA ejecutó una batería de pruebas con casos trampa extremos: valores de CPU en 0.0% (para comprobar que no se descarten falsamente), porcentajes absurdos (-5.0% y 150.0%), IPs malformadas con letras y octetos mayores a 255, status HTTP fuera de rango y división para cero simulada. El código superó todos los filtros, pero se identificó que en limpieza_csv.py solo se capturaba FileNotFoundError, dejando desprotegido al sistema si el archivo está bloqueado o sin permisos de lectura (IOError).
+
+* **Análisis Crítico:** Al someter el proyecto a esta auditoría con trampas, confirmé que la lógica defensiva de los filtros funciona correctamente. Tomé la observación sobre la lectura del CSV y agregué el bloque except IOError para garantizar que ante archivos bloqueados en disco el programa no sufra una caída inesperada.
+
+* **Solución Final Aplicada:** 
+```python
+    except FileNotFoundError:
+        print("Error: No se pudo encontrar el archivo")
+    except IOError:
+        print("Error: No se pudo leer el archivo")
+
+    return registros_validos
+```
