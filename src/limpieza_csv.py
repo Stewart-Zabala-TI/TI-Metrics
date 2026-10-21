@@ -58,6 +58,8 @@ def cargar_y_deduplicar_logs(ruta_csv):
                 })
 
     except FileNotFoundError:
-        print("El archivo CSV no fue encontrado.")
+        print("Error: No se pudo encontrar el archivo")
+    except IOError:
+        print("Error: No se pudo leer el archivo")
 
     return registros_validos
